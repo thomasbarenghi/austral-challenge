@@ -1,0 +1,7 @@
+export { default as Header } from './Header'
+export { default as Footer } from './Footer'
+export { default as PokemonItem } from './Pokemon/Item'
+export { default as PokemonGrid } from './Pokemon/Grid'
+export { default as PokeLoader } from './Pokemon/Loader'
+export { default as PokeError } from './Pokemon/Error'
+export { default as PokeModal } from './Pokemon/Modal'
