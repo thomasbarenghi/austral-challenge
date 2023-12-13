@@ -13,4 +13,7 @@ export interface CharacterInfo {
   }
   status: string
   weight: number
+  sprites: {
+    front_default: string
+  }
 }

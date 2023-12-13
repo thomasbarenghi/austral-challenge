@@ -20,14 +20,14 @@ interface Props {
 }
 
 const extractId = (url: string) => {
-  // https://pokeapi.co/api/v2/pokemon/1/
   const urlParts = url.split('/')
-  return urlParts[urlParts.length - 2]
+  return parseInt(urlParts[urlParts.length - 2])
 }
 
 const PokeModal = ({ pokemon, isOpen, setIsOpen }: Props) => {
-  console.log(extractId(pokemon.url))
-  const { data, isLoading, error } = useSWR<CharacterInfo>(endpoints.POKEMON(1))
+  const { data, isLoading, error } = useSWR<CharacterInfo>(
+    endpoints.POKEMON(extractId(pokemon.url))
+  )
 
   return (
     <>
@@ -62,6 +62,7 @@ const PokeModal = ({ pokemon, isOpen, setIsOpen }: Props) => {
                 <h1 className='text-lg font-semibold'>
                   Información del Pokémon
                 </h1>
+                <img src={data?.sprites?.front_default} alt='pokemon' />
                 <p>La altura del Pokémon es: {data?.height}</p>
                 <p>El peso del Pokémon es: {data?.weight}</p>
                 <p>La especie del Pokémon es: {data?.species?.name}</p>
