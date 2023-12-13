@@ -17,13 +17,13 @@ const PokemonItem = ({ pokemon }: Props) => {
   return (
     <>
       <IonCard className='rounded-xl border p-2 shadow-none'>
-        <div className='aspect-square rounded-lg bg-yellow-100 p-5'>
+        {/* <div className='aspect-square rounded-lg bg-yellow-100 p-5'>
           <img
             alt='image'
             src={pokemon.dreamworld}
             className='aspect-square w-full'
           />
-        </div>
+        </div> */}
         <IonCardHeader className='px-3 pb-1'>
           <IonCardTitle className='font-semibold'>
             {pokemon?.name?.charAt(0)?.toUpperCase() + pokemon?.name?.slice(1)}

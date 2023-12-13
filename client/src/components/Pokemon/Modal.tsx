@@ -1,6 +1,4 @@
-import { GET_POKEMON_INFO } from '@/graphql/queries'
 import { type CharacterInfo, type Character } from '@/interfaces'
-import { useQuery } from '@apollo/client'
 import {
   IonButton,
   IonButtons,
@@ -12,6 +10,8 @@ import {
 } from '@ionic/react'
 import { createPortal } from 'react-dom'
 import { PokeError, PokeLoader } from '..'
+import { endpoints } from '@/utils/constants/endpoints.const'
+import useSWR from 'swr'
 
 interface Props {
   pokemon: Character
@@ -19,14 +19,15 @@ interface Props {
   setIsOpen: (isOpen: boolean) => void
 }
 
-interface Response {
-  pokemon: CharacterInfo
+const extractId = (url: string) => {
+  // https://pokeapi.co/api/v2/pokemon/1/
+  const urlParts = url.split('/')
+  return urlParts[urlParts.length - 2]
 }
 
 const PokeModal = ({ pokemon, isOpen, setIsOpen }: Props) => {
-  const { loading, error, data } = useQuery<Response>(GET_POKEMON_INFO, {
-    variables: { pokemonName: pokemon.name }
-  })
+  console.log(extractId(pokemon.url))
+  const { data, isLoading, error } = useSWR<CharacterInfo>(endpoints.POKEMON(1))
 
   return (
     <>
@@ -50,20 +51,20 @@ const PokeModal = ({ pokemon, isOpen, setIsOpen }: Props) => {
                   Cerrar
                 </IonButton>
               </IonButtons>
-              <IonTitle>{data?.pokemon?.name}</IonTitle>
+              <IonTitle>{data?.name}</IonTitle>
             </IonToolbar>
           </IonHeader>
-          {loading && <PokeLoader />}
+          {isLoading && <PokeLoader />}
           {error && <PokeError />}
-          {!loading && !error && (
+          {!isLoading && !error && (
             <IonContent>
               <div className='p-7'>
                 <h1 className='text-lg font-semibold'>
                   Información del Pokémon
                 </h1>
-                <p>La altura del Pokémon es: {data?.pokemon?.height}</p>
-                <p>El peso del Pokémon es: {data?.pokemon?.weight}</p>
-                <p>La especie del Pokémon es: {data?.pokemon?.species?.name}</p>
+                <p>La altura del Pokémon es: {data?.height}</p>
+                <p>El peso del Pokémon es: {data?.weight}</p>
+                <p>La especie del Pokémon es: {data?.species?.name}</p>
               </div>
             </IonContent>
           )}

@@ -1,10 +1,6 @@
 export interface Character {
-  id: string
-  name: string
-  image: string
   url: string
-  dreamworld: string
-  artwork: string
+  name: string
 }
 
 export interface CharacterInfo {

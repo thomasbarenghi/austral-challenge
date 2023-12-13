@@ -1,22 +1,31 @@
-import { PokemonGrid } from '@/components'
-import { GET_POKEMONS } from '@/graphql/queries'
+import { Paginator, PokemonGrid } from '@/components'
 import { type Character } from '@/interfaces'
-import { useQuery } from '@apollo/client'
-import { IonContent, IonRefresher, IonRefresherContent } from '@ionic/react'
+import { endpoints } from '@/utils/constants/endpoints.const'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet'
+import useSWR from 'swr'
 
 interface Response {
-  pokemons: {
-    results: Character[]
-  }
+  results: Character[]
+  next: string | null
+  previous: string | null
+  count: number
 }
 
 const Home = () => {
-  const { data, loading, error, refetch } = useQuery<Response>(GET_POKEMONS)
+  const [page, setPage] = useState(1)
+  const { data, mutate, isLoading, error } = useSWR<Response>(
+    endpoints.POKEMONS(20, page)
+  )
 
-  const handleRefresh = async (event: CustomEvent) => {
-    await refetch()
-    event.detail.complete()
+  const handleNext = () => {
+    data?.next && setPage((prev) => prev + 1)
+    mutate()
+  }
+
+  const handlePrev = () => {
+    data?.previous && setPage((prev) => prev - 1)
+    mutate()
   }
 
   return (
@@ -44,19 +53,30 @@ const Home = () => {
           </div>
         </section>
         <section className='section-padding-x-1 flex w-full flex-col items-center'>
-          <div className=' 2xl:container'>
-            <IonContent>
+          <div className=' flex w-full flex-col gap-4 2xl:container'>
+            {/* <IonContent>
               <IonRefresher slot='fixed' onIonRefresh={handleRefresh}>
                 <IonRefresherContent />
               </IonRefresher>
-            </IonContent>
+            </IonContent> */}
             <h2 className='text-center text-2xl font-semibold'>
               Explora los Pokémon 🔥
             </h2>
             <PokemonGrid
-              pokemons={data?.pokemons?.results ?? []}
-              isLoading={loading}
+              pokemons={data?.results ?? []}
+              isLoading={isLoading}
               isError={Boolean(error)}
+              currentPage={page}
+              handleNext={handleNext}
+              count={data?.count}
+              handlePrev={handlePrev}
+            />
+            <Paginator
+              count={data?.count ?? 0}
+              page={page}
+              limit={20}
+              handleNext={handleNext}
+              handlePrev={handlePrev}
             />
           </div>
         </section>
@@ -64,4 +84,5 @@ const Home = () => {
     </>
   )
 }
+
 export default Home
