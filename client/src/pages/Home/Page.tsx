@@ -46,7 +46,7 @@ const Home = () => {
           <div className=' absolute left-0 top-0 z-[-1] h-full w-full'>
             <div className='absolute z-0 h-full w-full bg-black opacity-70' />
             <img
-              src='/image/home-hero.png'
+              src='/image/home-hero.webp'
               alt='hero'
               className='h-full w-full object-cover'
             />
