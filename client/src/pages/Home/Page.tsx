@@ -18,13 +18,8 @@ const Home = () => {
     endpoints.POKEMONS(20, page)
   )
 
-  const handleNext = () => {
-    data?.next && setPage((prev) => prev + 1)
-    mutate()
-  }
-
-  const handlePrev = () => {
-    data?.previous && setPage((prev) => prev - 1)
+  const handleChangePage = (page: number) => {
+    setPage(page)
     mutate()
   }
 
@@ -66,17 +61,12 @@ const Home = () => {
               pokemons={data?.results ?? []}
               isLoading={isLoading}
               isError={Boolean(error)}
-              currentPage={page}
-              handleNext={handleNext}
-              count={data?.count}
-              handlePrev={handlePrev}
             />
             <Paginator
               count={data?.count ?? 0}
               page={page}
               limit={20}
-              handleNext={handleNext}
-              handlePrev={handlePrev}
+              handleChangePage={handleChangePage}
             />
           </div>
         </section>

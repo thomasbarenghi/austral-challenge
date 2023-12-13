@@ -2,13 +2,9 @@ import { type Character } from '@/interfaces'
 import { PokeError, PokeLoader, PokemonItem } from '..'
 
 interface Props {
-  count?: number
   pokemons: Character[]
   isLoading?: boolean
   isError?: boolean
-  currentPage?: number
-  handleNext?: () => void
-  handlePrev?: () => void
 }
 
 const PokemonGrid = ({ pokemons, isLoading, isError }: Props) => (

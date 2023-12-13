@@ -4,11 +4,10 @@ interface Props {
   count: number
   page: number
   limit: number
-  handleNext: () => void
-  handlePrev: () => void
+  handleChangePage: (page: number) => void
 }
 
-const Paginator = ({ count, page, limit, handleNext, handlePrev }: Props) => {
+const Paginator = ({ count, page, limit, handleChangePage }: Props) => {
   const [total] = useState(Math.ceil(count / limit))
   const [toShow, setToShow] = useState<number[]>([])
   const rest = 2
@@ -27,16 +26,26 @@ const Paginator = ({ count, page, limit, handleNext, handlePrev }: Props) => {
   useEffect(handleSetToShow, [page, total, rest])
 
   return (
-    <div className='flex w-full justify-center gap-4'>
-      <button onClick={handlePrev} className={`${page === 1 ? 'hidden' : ''}`}>
+    <div className='flex w-full flex-col items-center justify-center gap-4 sm:flex-row'>
+      <button
+        onClick={() => {
+          handleChangePage(page - 1)
+        }}
+        className={`${page === 1 ? 'hidden' : ''}`}
+      >
         Anterior
       </button>
       <div className='flex gap-2'>
         {toShow.map((item, index) => (
           <button
             className={`p-1 ${
-              item === page ? 'rounded-sm bg-blue-800 text-white' : ''
+              item === page
+                ? '!cursor-default rounded-sm bg-blue-800 text-white'
+                : ''
             }`}
+            onClick={() => {
+              handleChangePage(item)
+            }}
             key={index}
           >
             {item}
@@ -44,7 +53,9 @@ const Paginator = ({ count, page, limit, handleNext, handlePrev }: Props) => {
         ))}
       </div>
       <button
-        onClick={handleNext}
+        onClick={() => {
+          handleChangePage(page + 1)
+        }}
         className={`${page === total ? 'hidden' : ''}`}
       >
         Siguiente
